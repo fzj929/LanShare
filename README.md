@@ -136,3 +136,7 @@ python scripts/integration_test.py artifacts/win-x64/LanShare.exe
 - https://learn.microsoft.com/aspnet/core/fundamentals/servers/kestrel/
 
 交叉发布成功不代表已在实际 ARM 设备运行验证。当前发布包的测试范围见 [VALIDATION.md](docs/VALIDATION.md)。
+
+## 开源协议
+
+本项目采用 [MIT License](LICENSE)。Copyright (c) 2026 Feng Zhengjin。

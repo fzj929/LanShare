@@ -13,7 +13,7 @@ out = args.output or root / 'artifacts'
 out.mkdir(parents=True, exist_ok=True)
 for rid in ([args.rid] if args.rid else ['win-x64', 'linux-x64', 'linux-arm64', 'linux-arm']):
     executable = 'LanShare.exe' if rid == 'win-x64' else 'LanShare'
-    items = [(root / 'artifacts' / rid / executable, executable), (root / 'README.md', 'README.md')]
+    items = [(root / 'artifacts' / rid / executable, executable), (root / 'README.md', 'README.md'), (root / 'LICENSE', 'LICENSE')]
     scripts = ['Start-Windows.cmd', 'Allow-Lan-Windows.ps1'] if rid == 'win-x64' else ['start-linux.sh']
     items += [(root / 'scripts' / name, name) for name in scripts]
     items += [(p, p.relative_to(root).as_posix()) for p in sorted((root / 'docs').rglob('*')) if p.is_file()]
