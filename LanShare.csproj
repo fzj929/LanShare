@@ -13,6 +13,6 @@
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Web\*" />
+    <EmbeddedResource Include="Web\**\*" />
   </ItemGroup>
 </Project>

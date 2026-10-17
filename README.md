@@ -4,6 +4,8 @@ C# / ASP.NET Core 10 / Kestrel 实现，网页资源内嵌。发布包包含 .NE
 
 **[下载最新版本](https://github.com/fzj929/LanShare/releases/latest)** · **[详细使用指南](docs/USAGE.md)** · **[v1.0.0 测试与兼容性说明](docs/VALIDATION.md)**
 
+开发者可查看[接口与前端模块结构](docs/DEVELOPMENT.md)。
+
 一台电脑启动程序，同一局域网的其他设备通过浏览器上传和下载。默认端口 `8080`，默认单文件上限 2 GiB。上传文件保存在服务电脑，程序重启后仍可访问。
 
 ![LanShare 文件上传下载页面](docs/images/preview.png)

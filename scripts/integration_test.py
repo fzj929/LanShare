@@ -81,6 +81,11 @@ with tempfile.TemporaryDirectory(prefix='lanshare-test-') as temp:
         assert '局域网文件站'.encode() in page
         assert 'frame-ancestors' in headers['Content-Security-Policy']
         request('/app.js'); request('/app.css')
+        assert b'type="module"' in page, 'Frontend entry point must load as an ES module'
+        module_paths = ['/js/api/http.js', '/js/api/status.js', '/js/api/auth.js', '/js/api/files.js']
+        for path in module_paths:
+            _, module_headers = request(path)
+            assert 'javascript' in module_headers['Content-Type'], path
         request('/api/status', headers={'Host': 'attacker.invalid'}, expected=400)
         request('/api/files?name=bad', 'PUT', b'a', {'X-LanShare-Request': ''}, expected=403)
         request('/api/files?name=bad', 'PUT', b'a', {'Origin': 'http://attacker.invalid'}, expected=403)
@@ -115,6 +120,7 @@ with tempfile.TemporaryDirectory(prefix='lanshare-test-') as temp:
         env['LANSHARE_ACCESS_PASSWORD'] = 'integration-guest'
         start()
         state = json.loads(request('/api/status')[0]); assert state['requiresPassword'] and not state['authenticated']
+        for path in module_paths: request(path)
         request('/api/files', expected=401)
         request(f"/api/files/{first['id']}/download", expected=401)
         request('/api/login', 'POST', b'{"password":"wrong"}', {'Content-Type':'application/json'}, expected=401)
