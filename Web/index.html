@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LanShare · 局域网文件站</title><link rel="icon" href="data:,"><link rel="stylesheet" href="/app.css"><script src="/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="/" aria-label="LanShare 首页"><span class="brand-mark">L↗</span><span>LanShare<small>局域网文件站</small></span></a><div class="header-actions"><span id="connection" class="connection">正在连接</span><button id="account" class="quiet">管理员登录</button><button id="logout" class="quiet" hidden>退出登录</button></div></header>
+<main>
+<section class="intro"><div><p class="eyebrow">在同一个网络，轻松分享</p><h1>文件，在这里汇合。</h1><p class="lead">从电脑到电脑，打开浏览器即可上传与下载。</p></div><aside class="share"><span>将地址发送给同一局域网的伙伴</span><div><select id="addresses" aria-label="局域网访问地址"><option>正在获取地址…</option></select><button id="copy">复制地址</button></div><small>服务电脑需保持开机并运行此程序</small></aside></section>
+<section id="locked" class="locked" hidden><h2>请输入访问密码</h2><p>此文件站已启用密码保护，登录后即可上传和下载。</p><button id="unlock" class="primary">登录文件站</button></section>
+<div id="workspace">
+<section id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="选择要上传的文件，或将文件拖拽到这里"><div class="upload-symbol" aria-hidden="true">↑</div><div><h2>拖拽文件到这里</h2><p>或 <span class="text-link">选择文件</span> · 支持多文件上传</p><small id="upload-limit">正在获取上传限制</small></div><span class="drop-note">所有文件保存在服务电脑上</span></section>
+<input id="file-input" type="file" multiple hidden>
+<section id="uploads" class="uploads" aria-label="上传任务" hidden><div class="section-line"><h2>上传任务</h2><button id="clear-uploads" class="quiet">清除已完成</button></div><div id="upload-list"></div></section>
+<section class="library"><div class="library-header"><div><h2>共享文件 <span id="file-count">0</span></h2><p id="summary">正在读取文件列表…</p></div><div class="tools"><input id="search" type="search" placeholder="搜索文件名" aria-label="搜索文件名"><select id="sort" aria-label="排序"><option value="newest">最新上传</option><option value="name">名称 A–Z</option><option value="size">文件最大</option></select><button id="refresh" class="quiet">刷新</button></div></div>
+<div class="table-scroll"><table><thead><tr><th>文件名称</th><th>大小</th><th>上传时间</th><th class="actions-heading">操作</th></tr></thead><tbody id="files"></tbody></table></div><div id="empty" class="empty" hidden><span aria-hidden="true">↗</span><h3>还没有共享文件</h3><p>上传第一个文件，让分享从这里开始。</p></div><div id="list-error" class="error" role="alert" hidden></div>
+</section></div>
+</main>
+<footer><span>LanShare / 本地存储，局域网共享</span><span id="role">普通访客</span></footer>
+<dialog id="login-dialog"><form id="login-form"><button type="button" id="close-dialog" class="close" aria-label="关闭">×</button><p class="eyebrow">LANSHARE</p><h2 id="login-title">管理员登录</h2><p id="login-description">管理员可删除共享文件。密码显示在服务电脑的启动窗口中。</p><label for="password">密码</label><input id="password" type="password" autocomplete="current-password" required><p id="login-error" class="error" role="alert"></p><button id="login-submit" class="primary" type="submit">登录</button></form></dialog>
+<div id="toast" role="status" hidden></div>
+</body></html>
