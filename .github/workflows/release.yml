@@ -1,0 +1,62 @@
+name: Build and publish release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to build and publish
+        required: true
+        default: v1.0.0
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: '10.0.401'
+      - name: Build four self-contained packages
+        run: sh scripts/publish.sh
+      - name: Test Linux x64 executable
+        run: |
+          chmod +x artifacts/linux-x64/LanShare
+          python3 scripts/integration_test.py artifacts/linux-x64/LanShare
+      - name: Generate checksum list
+        working-directory: artifacts
+        run: |
+          sha256sum LanShare-win-x64.zip LanShare-linux-x64.tar.gz LanShare-linux-arm64.tar.gz LanShare-linux-arm.tar.gz > LanShare-SHA256.txt
+      - name: Upload assets and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Use a version tag such as v1.0.0'; exit 1; }
+          if gh release view "$RELEASE_TAG" --json isDraft > /tmp/lanshare-release.json 2>/dev/null; then
+            python3 -c 'import json; assert json.load(open("/tmp/lanshare-release.json"))["isDraft"], "Release is already public; refusing to replace it"'
+            gh release view "$RELEASE_TAG" --json body --jq .body > /tmp/lanshare-notes.md
+          else
+            cp CHANGELOG.md /tmp/lanshare-notes.md
+            gh release create "$RELEASE_TAG" --verify-tag --draft --title "LanShare $RELEASE_TAG" --notes-file /tmp/lanshare-notes.md
+          fi
+          gh release upload "$RELEASE_TAG" artifacts/LanShare-win-x64.zip artifacts/LanShare-linux-x64.tar.gz artifacts/LanShare-linux-arm64.tar.gz artifacts/LanShare-linux-arm.tar.gz artifacts/LanShare-SHA256.txt --clobber
+          printf '\n\n### GitHub Actions 验证\n\n本次云端构建额外通过 Linux x64 自包含程序端到端测试。ARM64 和 ARM32 仍未在对应设备执行验证。\n\n构建日志：https://github.com/%s/actions/runs/%s\n' "$GH_REPO" "$GITHUB_RUN_ID" >> /tmp/lanshare-notes.md
+          gh release edit "$RELEASE_TAG" --draft=false --latest --notes-file /tmp/lanshare-notes.md
+          gh release view "$RELEASE_TAG" --json url,isDraft,assets

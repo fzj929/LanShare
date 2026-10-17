@@ -123,6 +123,12 @@ python scripts/integration_test.py artifacts/win-x64/LanShare.exe
 
 测试会启动临时服务并验证上传下载哈希、中文与同名文件、大小限制、Range 下载、上传中断清理、重启持久化和密码权限。测试临时文件在系统临时目录创建并在结束后清理。
 
+### GitHub 自动发布
+
+仓库的 Actions → **Build and publish release** 支持手动输入已有版本标签，或在推送新的 `v*` 标签时运行。流程构建四个平台的自包含包，在 Linux x64 上执行集成测试，生成 SHA-256 清单，并将附件上传到对应 Release。所有附件上传完成后才公开 Release。已公开的同名版本不会被此流程自动覆盖。
+
+工作流定义在 main 分支。若早期标签还不含工作流，可从 main 手动运行，并在 tag 输入框填写该标签。
+
 ## 参考
 
 - https://learn.microsoft.com/dotnet/core/deploying/single-file/overview
