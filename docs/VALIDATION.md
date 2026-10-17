@@ -14,6 +14,7 @@
 
 - Release 编译成功，无编译错误或警告。
 - Windows 自包含 EXE 单独复制到临时目录，DOTNET_ROOT 指向不存在的目录，仍可启动并通过 HTTP 集成测试。
+- Linux x64 自包含程序在 GitHub Actions Ubuntu runner 中运行并通过同一套端到端测试，日志见[首次发布构建](https://github.com/fzj929/LanShare/actions/runs/39039886063)。
 - 页面与内嵌 JS/CSS 可访问。
 - 上传后下载的 SHA-256 与原始文件相同。
 - 中文/特殊字符文件名、同名文件、零字节文件正确处理。
@@ -30,8 +31,10 @@
 
 ## 尚未验证
 
-- Linux x64、ARM64、ARM32 未在对应系统或真实硬件上启动验证，当前证据为交叉发布及包结构/架构检查。
+- Linux ARM64、ARM32 未在对应系统或真实硬件上启动验证，当前证据为交叉发布及包结构/架构检查。Linux x64 已在云端 Ubuntu runner 验证，但未覆盖所有 Linux 发行版。
 - 未从第二台实体局域网电脑验证网络可达性；实际网络仍受本机防火墙和路由器隔离设置影响。
 - 未进行多 GiB 大文件、长期运行、断电持久性或高并发压力测试。
 
 Windows 实测通过不等于所有目标系统均已实测通过。使用者应按 [微软 .NET 10 支持清单](https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md) 选择 Linux 发行版，并满足基础库要求。
+
+v1.0.0 压缩包内保留标签提交时的初始验证记录，云端 Linux x64 的后续验证结果同时记载在 Release 说明与本页。程序源码标签未变更。
